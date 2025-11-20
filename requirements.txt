@@ -1,0 +1,7 @@
+# requirements.txt
+streamlit
+pandas
+pyodbc
+sqlalchemy
+# openpyxl es necesario si vas a leer archivos .xlsx con pandas
+openpyxl

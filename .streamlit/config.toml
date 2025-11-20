@@ -1,0 +1,11 @@
+# .streamlit/config.toml
+
+[theme]
+base="light"  # Opciones: "light" o "dark". Tu ejemplo usa un tema claro.
+primaryColor="#2E86C1" # Un azul corporativo (puedes ajustarlo)
+backgroundColor="#FFFFFF" # Fondo blanco
+secondaryBackgroundColor="#F0F2F6" # Un gris claro para contenedores secundarios
+textColor="#262730" # Color de texto oscuro
+
+[global]
+disableWidgetStateDuplicationWarning=true # Para evitar advertencias comunes de widgets
