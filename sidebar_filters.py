@@ -80,29 +80,33 @@ def render_sidebar_filters(df_data):
     # ======================================================
     # 2️⃣  RANGO DE EDAD
     # ======================================================
-    st.sidebar.markdown("<div class='filter-label'>Rango de Edad</div>", unsafe_allow_html=True)
+    st.sidebar.markdown("<div class='filter-label'>Rango de Edad</div>", unsafe_allow_html=True) 
 
     if 'RANGO_DE_EDAD' in df_filtered.columns:
-
-        opciones = (
-            df_filtered["RANGO_DE_EDAD"]
-            .dropna()
-            .unique()
-            .tolist()
+        
+        # 1. Preparación de datos: Asegurar que los nulos se traten como 'Sin Dato'
+        df_filtered['RANGO_DE_EDAD'] = df_filtered['RANGO_DE_EDAD'].fillna('Sin Dato')
+        
+        # 2. Definir Opciones: Incluir 'Todos' al inicio de la lista de rangos únicos
+        # Usamos list comprehension para que 'Todos' no se añada si ya está en el DF.
+        unique_rangos = [r for r in df_filtered['RANGO_DE_EDAD'].unique().tolist() if r != 'Todos']
+        options_con_todos = ['Todos'] + sorted(unique_rangos)
+        
+        # 3. Widget: Unificar el multiselect para usar la etiqueta 'Todos' por defecto
+        selected_rangos = st.sidebar.multiselect(
+            "**Rango de Edad**", # Este título es interno, el visible es el de filter-label
+            options=options_con_todos,
+            default=['Todos'], # <--- Deja solo esta línea para que 'Todos' sea el valor inicial
+            label_visibility="collapsed" # Ocultar el título interno del multiselect
         )
-
-        opciones = [o for o in opciones if o != "None"]
-        opciones = ["Todos"] + sorted(opciones)
-
-        sel_rangos = st.sidebar.multiselect(
-            "",
-            opciones,
-            default=[o for o in opciones if o != "Todos"],
-            label_visibility="collapsed"
-        )
-
-        if "Todos" not in sel_rangos:
-            df_filtered = df_filtered[df_filtered["RANGO_DE_EDAD"].isin(sel_rangos)]
+        
+        # 4. Aplicar Filtro: Si 'Todos' está seleccionado, no filtra (pasa); si no, filtra.
+        if 'Todos' in selected_rangos:
+            # No se aplica filtro, se usa el df_filtered completo hasta este punto.
+            pass 
+        else:
+            # Aplicamos filtro solo con los rangos seleccionados
+            df_filtered = df_filtered[df_filtered['RANGO_DE_EDAD'].isin(selected_rangos)]
 
     # ======================================================
     # 3️⃣  FECHA DE MUESTRA (SLIDER – SIN CAMBIAR NADA)
